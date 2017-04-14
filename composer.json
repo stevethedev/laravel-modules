@@ -28,7 +28,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Orphan\\Modules": "src/"
+            "Orphan\\Modules\\": "src/"
         }
     }
 }
