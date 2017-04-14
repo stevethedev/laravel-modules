@@ -1,11 +1,11 @@
 <?php
-namespace \Orphan\Modules\Providers;
+namespace Orphan\Modules\Providers;
 
-use \Illuminate\Support\ServiceProvider;
-use \Illuminate\Support\Facades\Route;
-use \Illuminate\Foundation\Application;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
 
-use \Orphan\Modules\Managers\ModuleManager;
+use Orphan\Modules\Managers\ModuleManager;
 
 class ModuleServiceProvider extends ServiceProvider
 {
