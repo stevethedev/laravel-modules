@@ -10,9 +10,9 @@ use Orphan\Modules\Managers\ModuleManager;
 class ModuleServiceProvider extends ServiceProvider
 {
     /**
-     * Perform post-registration booting of service
+     *  Loads all of the modules from the base application directory.
      */
-    public function boot()
+    public function register()
     {
         $this->app->singleton('modules', function ($app) {
             $modules = new ModuleManager($app);
@@ -21,13 +21,7 @@ class ModuleServiceProvider extends ServiceProvider
 
             return $modules;
         });
-    }
 
-    /**
-     *  Loads all of the modules from the base application directory.
-     */
-    public function register()
-    {
         $this->publishes(
             $this->app->modules->getAssetRegistration()
         );

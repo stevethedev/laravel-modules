@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 
 class ModuleManager
 {
+    protected $modules = array();
     const CONFIG_NAME = 'orphan.modules';
 
     /**
@@ -47,6 +48,8 @@ class ModuleManager
     public function getBaseConfigPath()
     {
         return __DIR__ . DIRECTORY_SEPARATOR .
+            '..' . DIRECTORY_SEPARATOR .
+            '..' . DIRECTORY_SEPARATOR .
             'config' . DIRECTORY_SEPARATOR .
             self::CONFIG_NAME . '.php';
     }
@@ -102,8 +105,8 @@ class ModuleManager
      */
     private function loadModuleConfig()
     {
-        if (isset($this->app['modules'])) {
-            return $this->app['modules'];
+        if (isset($this->modules)) {
+            return $this->modules;
         }
 
         $this->moduleConfig = array();
@@ -111,7 +114,8 @@ class ModuleManager
         $path = app_path() . DIRECTORY_SEPARATOR . $this->getConfig('registration.directory');
 
         if (!file_exists($path)) {
-            $this->app->log->warning("No modules were loaded because the module path could not be found:\n\tPath: $path");
+            $this->app->log->warning("No modules were loaded because the module path could not be found:\n".
+                "\tPath: $path");
             return $this->moduleConfig;
         }
 
@@ -154,7 +158,7 @@ class ModuleManager
 
         closedir($path);
 
-        return $this->app['modules'];
+        return $this->modules;
     }
 
     /**
