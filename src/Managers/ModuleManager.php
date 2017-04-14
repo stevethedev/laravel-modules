@@ -1,9 +1,9 @@
 <?php
 
-namespace \Orphan\Modules\Managers;
+namespace Orphan\Modules\Managers;
 
-use \Illuminate\Foundation\Application;
-use \Illuminate\Log\Writer as Logger;
+use Illuminate\Foundation\Application;
+use Illuminate\Log\Writer as Logger;
 
 class ModuleManager
 {
@@ -117,6 +117,7 @@ class ModuleManager
             return $this->moduleConfig;
         }
 
+        $defaultSettings = $this->getConfig('default');
         $registerFile = $this->getConfig('registration.file');
 
         // loop through all of the
@@ -156,16 +157,6 @@ class ModuleManager
         closedir($path);
 
         return $this->app['modules'];
-    }
-
-    private function mergeConfig($config)
-    {
-        static $defaultSettings = null;
-        if (!$defaultSettings) {
-            $defaultSettings = $this->getConfig('default');
-        }
-
-        $config = array_replace_recursive()
     }
 
     /**
