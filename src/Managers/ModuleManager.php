@@ -3,7 +3,6 @@
 namespace Orphan\Modules\Managers;
 
 use Illuminate\Foundation\Application;
-use Illuminate\Log\Writer as Logger;
 
 class ModuleManager
 {
@@ -15,10 +14,9 @@ class ModuleManager
      * @param  \Illuminate\Foundation\Application  $app
      * @return void
      */
-    public function __construct(Application $app, Logger $logger)
+    public function __construct(Application $app)
     {
         $this->app = $app;
-        $this->logger = $logger;
     }
 
     /**
@@ -113,7 +111,7 @@ class ModuleManager
         $path = app_path() . DIRECTORY_SEPARATOR . $this->getConfig('registration.directory');
 
         if (!file_exists($path)) {
-            $this->logger->warning("No modules were loaded because the module path could not be found:\n\tPath: $path");
+            $this->app->log->warning("No modules were loaded because the module path could not be found:\n\tPath: $path");
             return $this->moduleConfig;
         }
 
@@ -127,7 +125,7 @@ class ModuleManager
 
             // Check to see if a registration file exists
             if (!file_exists($registerPath)) {
-                $this->logger->warning(
+                $this->app->log->warning(
                     "A module could not be loaded because the registration file does not exist:\n".
                     "\tModule: $moduleName\n\tRegistration File: $registerPath"
                 );
@@ -136,7 +134,7 @@ class ModuleManager
 
             // Check to see if we can load this module's file
             if (!$thisModule = include($registerPath)) {
-                $this->logger->warning(
+                $this->app->log->warning(
                     "A module could not be loaded because the registration file could not be executed:\n".
                     "\tModule: $moduleName\n\tRegistration File: $registerPath"
                 );

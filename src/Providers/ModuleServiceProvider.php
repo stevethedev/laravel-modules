@@ -17,7 +17,9 @@ class ModuleServiceProvider extends ServiceProvider
     public function __construct(Application $app)
     {
         parent::__construct($app);
-        $this->manager = $this->app->singleton(ModuleManager::class);
+        $this->app->singleton('modules', function ($app) {
+            return new ModuleManager($app);
+        });
     }
 
     /**
@@ -25,7 +27,7 @@ class ModuleServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->manager->load();
+        $this->app->modules->load();
     }
 
     /**
@@ -43,7 +45,7 @@ class ModuleServiceProvider extends ServiceProvider
     private function registerAssets()
     {
         $this->publishes(
-            $this->manager->getAssetRegistration()
+            $this->app->modules->getAssetRegistration()
         );
     }
 
