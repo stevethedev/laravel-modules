@@ -35,15 +35,6 @@ class ModuleServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerAssets();
-        $this->loadModules();
-    }
-
-    /**
-     * Publishes the configuration file.
-     */
-    private function registerAssets()
-    {
         $this->publishes(
             $this->app->modules->getAssetRegistration()
         );
