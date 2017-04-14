@@ -10,24 +10,17 @@ use Orphan\Modules\Managers\ModuleManager;
 class ModuleServiceProvider extends ServiceProvider
 {
     /**
-     * Creates a new service provider instance
-     *
-     * @param \Illuminate\Foundation\Application  $app
-     */
-    public function __construct(Application $app)
-    {
-        parent::__construct($app);
-        $this->app->singleton('modules', function ($app) {
-            return new ModuleManager($app);
-        });
-    }
-
-    /**
      * Perform post-registration booting of service
      */
     public function boot()
     {
-        $this->app->modules->load();
+        $this->app->singleton('modules', function ($app) {
+            $modules = new ModuleManager($app);
+
+            $modules->load();
+
+            return $modules;
+        });
     }
 
     /**
