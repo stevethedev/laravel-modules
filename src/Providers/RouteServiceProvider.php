@@ -14,7 +14,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-        $basePath = $this->apps->modules->getConfig('registration.directory');
+        $basePath = $this->app->modules->getConfig('registration.directory');
 
         foreach ($this->app->modules->getModules() as $module) {
             $namespace = "{$module['namespace']}\\{$module['paths']['controllers']}";
