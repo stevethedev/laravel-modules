@@ -21,6 +21,11 @@ class DistributedServiceProvider extends ServiceProvider
     {
         foreach ($this->app->modules->getModules() as $module) {
             foreach ($module['providers'] as $provider) {
+                if ('.\\' === substr($provider, 0, 2)) {
+                    $provider = "{$module['namespaces']['providers']}\\".substr($provider, 2);
+                } elseif (false === strpos($provider, '\\')) {
+                    $provider = "{$module['namespaces']['providers']}\\$provider";
+                }
                 $this->app->register($provider);
             }
         }
