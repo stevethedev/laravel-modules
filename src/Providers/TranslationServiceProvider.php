@@ -4,10 +4,10 @@ namespace Orphan\Modules\Providers;
 
 use Orphan\Modules\Translation\DistributedFileLoader;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Translation\TranslationServiceProvider as BaseTranslationServiceProvider;
 use Illuminate\Translation\Translator;
 
-class TranslationServiceProvider extends ServiceProvider
+class TranslationServiceProvider extends BaseTranslationServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
