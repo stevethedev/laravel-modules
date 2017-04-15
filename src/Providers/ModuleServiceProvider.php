@@ -33,5 +33,6 @@ class ModuleServiceProvider extends ServiceProvider
     protected function registerProviders()
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->app->register(ViewServiceProvider::class);
     }
 }
