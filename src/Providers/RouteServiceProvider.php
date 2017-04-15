@@ -16,8 +16,8 @@ class RouteServiceProvider extends ServiceProvider
     {
         foreach ($this->app->modules->getModules() as $module) {
             if (file_exists($module['path'])) {
-                $this->registerWebRoutes($module['paths']['routes'], $module['namespaces']['routes']);
-                $this->registerApiRoutes($module['paths']['routes'], $module['namespaces']['routes']);
+                $this->registerWebRoutes($module['paths']['routes'], $module['namespaces']['controllers']);
+                $this->registerApiRoutes($module['paths']['routes'], $module['namespaces']['controllers']);
             }
         }
     }
