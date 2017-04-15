@@ -6,8 +6,9 @@ use Illuminate\Foundation\Application;
 
 class ModuleManager
 {
-    protected $modules = array();
     const CONFIG_NAME = 'orphan.modules';
+
+    protected $modules = null;
 
     /**
      * Create a new ModuleManager object
@@ -105,60 +106,92 @@ class ModuleManager
      */
     private function loadModuleConfig()
     {
-        if (isset($this->modules)) {
+        if (!is_null($this->modules)) {
             return $this->modules;
         }
 
-        $this->moduleConfig = array();
+        $this->modules = array();
 
-        $path = app_path() . DIRECTORY_SEPARATOR . $this->getConfig('registration.directory');
+        $path = $this->getConfig('registration.directory');
 
         if (!file_exists($path)) {
             $this->app->log->warning("No modules were loaded because the module path could not be found:\n".
                 "\tPath: $path");
-            return $this->moduleConfig;
+            return $this->modules;
         }
 
         $defaultSettings = $this->getConfig('default');
-        $registerFile = $this->getConfig('registration.file');
+        $namespace = $this->getConfig('registration.namespace');
 
         // loop through all of the
         $handle = opendir($path);
         while (false !== ($moduleName = readdir($handle))) {
-            $registerPath = implode(DIRECTORY_SEPARATOR, [$path, $moduleName, $registerFile]);
-
-            // Check to see if a registration file exists
-            if (!file_exists($registerPath)) {
-                $this->app->log->warning(
-                    "A module could not be loaded because the registration file does not exist:\n".
-                    "\tModule: $moduleName\n\tRegistration File: $registerPath"
-                );
-                continue;
-            }
-
-            // Check to see if we can load this module's file
-            if (!$thisModule = include($registerPath)) {
-                $this->app->log->warning(
-                    "A module could not be loaded because the registration file could not be executed:\n".
-                    "\tModule: $moduleName\n\tRegistration File: $registerPath"
-                );
+            if (!$registerPath = $this->getRegisterPath($path, $moduleName)) {
                 continue;
             }
 
             $overwrite = array(
-                'module'    => $moduleName,
+                'module'    => "$moduleName",
                 'enabled'   => isset($thisModule['enabled']) && $thisModule['enabled'],
                 'folder'    => dirname($registerPath),
-                'namespace' => "\\{$this->getAppNamespace()}{$moduleName}",
+                'namespace' => isset($thisModule['namespace'])
+                    ? "{$thisModule['namespace']}"
+                    : "{$namespace}\\{$moduleName}",
             );
 
-            // cast to string to give us some extra flexibility
-            $this->moduleConfig["$moduleName"] = array_replace_recursive($defaultSettings, $thisModule, $overwrite);
+            $this->modules["$moduleName"] = array_replace_recursive(
+                $defaultSettings,
+                $thisModule,
+                $overwrite
+            );
         }
 
-        closedir($path);
+        closedir($handle);
 
         return $this->modules;
+    }
+
+    /**
+     * Gets the registration path for the given path and module, or else returns
+     * false if it is impossible to load a module from this directory.
+     *
+     * @param  string $path
+     * @param  string $moduleName
+     * @return string|bool
+     */
+    protected function getRegisterPath($path, $moduleName)
+    {
+        static $registerFile = null;
+        if (is_null($registerFile)) {
+            $registerFile = $this->getConfig('registration.file');
+        }
+
+        if ('.' === $moduleName || '..' === $moduleName) {
+            return false;
+        }
+
+        $registerPath = implode(DIRECTORY_SEPARATOR, [$path, $moduleName, $registerFile]);
+
+        // Check to see if a registration file exists
+        if (!file_exists($registerPath)) {
+            $this->app->log->warning(
+                "A module could not be loaded because the registration file does not exist:\n".
+                "\tModule: $moduleName\n\tRegistration File: $registerPath"
+            );
+            return false;
+        }
+
+        // Check to see if we can load this module's file
+        $thisModule = include($registerPath);
+        if (!is_array($thisModule)) {
+            $this->app->log->warning(
+                "A module could not be loaded because the registration file did not return an array:\n".
+                "\tModule: $moduleName\n\tRegistration File: $registerPath"
+            );
+            return false;
+        }
+
+        return $registerPath;
     }
 
     /**
@@ -197,36 +230,5 @@ class ModuleManager
         }
 
         return $moduleConfig;
-    }
-
-    /**
-     * Retrieves the application namespace from the composer config file, or
-     * else throws an error.
-     *
-     * @return string|null
-     */
-    private function getAppNamespace()
-    {
-        // memoize for increased performance
-        static $memo = null;
-        if ($memo) {
-            return $memo;
-        }
-
-        // read from teh composer file
-        $composer = json_decode(file_get_contents(base_path().'/composer.json'), true);
-        foreach ((array) data_get($composer, 'autoload.psr-4') as $namespace => $path) {
-            // iterate the autoload paths for the main application directory
-            foreach ((array) $path as $pathChoice) {
-                // if this path points to the application path, then it must be our path
-                if (realpath(app_path()) == realpath(base_path().'/'.$pathChoice)) {
-                    $memo = $namespace;
-                    return $namespace;
-                }
-            }
-        }
-
-        // otherwise, no path was defined and we should throw an error
-        throw new RuntimeException("Unable to detect application namespace.");
     }
 }
