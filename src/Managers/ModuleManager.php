@@ -130,6 +130,16 @@ class ModuleManager
                 continue;
             }
 
+            // Check to see if we can load this module's file
+            $thisModule = include($registerPath);
+            if (!is_array($thisModule)) {
+                $this->app->log->warning(
+                    "A module could not be loaded because the registration file did not return an array:\n".
+                    "\tModule: $moduleName\n\tRegistration File: $registerPath"
+                );
+                return false;
+            }
+
             $overwrite = array(
                 'module'    => "$moduleName",
                 'enabled'   => isset($thisModule['enabled']) && $thisModule['enabled'],
@@ -176,16 +186,6 @@ class ModuleManager
         if (!file_exists($registerPath)) {
             $this->app->log->warning(
                 "A module could not be loaded because the registration file does not exist:\n".
-                "\tModule: $moduleName\n\tRegistration File: $registerPath"
-            );
-            return false;
-        }
-
-        // Check to see if we can load this module's file
-        $thisModule = include($registerPath);
-        if (!is_array($thisModule)) {
-            $this->app->log->warning(
-                "A module could not be loaded because the registration file did not return an array:\n".
                 "\tModule: $moduleName\n\tRegistration File: $registerPath"
             );
             return false;
