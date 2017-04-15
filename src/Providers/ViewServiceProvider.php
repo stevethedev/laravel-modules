@@ -8,7 +8,7 @@ class ViewServiceProvider extends ServiceProvider
     public function register()
     {
         foreach ($this->app->modules->getModules() as $module) {
-            if (file_exists($module['path']['views'])) {
+            if (file_exists($module['paths']['views'])) {
                 $this->registerViews($module);
             }
         }
