@@ -15,7 +15,7 @@ return [
     'registration' => [
         'file'      => 'register.php',
         'directory' => env('MODULE_PATH', base_path('modules')),
-        'namespace' => env('MODULE_NAMESPACE', '\\Modules'),
+        'namespace' => env('MODULE_NAMESPACE', 'Modules'),
     ],
     'default' => [
         /*
