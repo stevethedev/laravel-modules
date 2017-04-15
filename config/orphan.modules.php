@@ -28,8 +28,11 @@ return [
          | configuration, then these paths will be used instead.
          |
          */
-        'enabled' => false,
-        'paths' => [
+        'module'        => 'Module',
+        'description'   => 'My Module',
+        'author'        => 'Anonymous',
+        'enabled'       => false,
+        'paths'         => [
             'controllers'   => 'Controllers',
             'lang'          => 'Lang',
             'models'        => 'Models',
@@ -38,5 +41,6 @@ return [
             'routes'        => 'Routes',
             'views'         => 'Views',
         ],
+        'namespaces' => [],
     ],
 ];

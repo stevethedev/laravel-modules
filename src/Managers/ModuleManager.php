@@ -143,13 +143,13 @@ class ModuleManager
             $overwrite = array(
                 'module'    => "$moduleName",
                 'enabled'   => isset($thisModule['enabled']) && $thisModule['enabled'],
-                'folder'    => dirname($registerPath),
+                'path'      => dirname($registerPath),
                 'namespace' => isset($thisModule['namespace']) //< allow users to overwrite the namespace
                     ? "{$thisModule['namespace']}"
                     : "{$namespace}\\{$moduleName}",
             );
 
-            $this->modules["$moduleName"] = array_replace_recursive(
+            $this->modules["$moduleName"] = $this->compileModule(
                 $defaultSettings,
                 $thisModule,
                 $overwrite
@@ -159,6 +159,24 @@ class ModuleManager
         closedir($handle);
 
         return $this->modules;
+    }
+
+    protected function compileModule($defaultSettings, $thisModule, $overwrite)
+    {
+        $module = array_replace_recursive(
+            $defaultSettings,
+            $thisModule,
+            $overwrite
+        );
+
+        foreach ($module['paths'] as $key => $path) {
+            $module['paths'][$key] = "{$module['path']}" . DIRECTORY_SEPARATOR . $path;
+            if (!isset($module['namespaces'][$key])) {
+                $module['namespaces'][$key] = "{$module['namespace']}\\{$path}";
+            }
+        }
+
+        return $module;
     }
 
     /**
