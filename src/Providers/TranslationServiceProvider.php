@@ -51,7 +51,7 @@ class TranslationServiceProvider extends ServiceProvider
         $this->app->singleton('translation.loader', function ($app) {
             $lang = [];
 
-            foreach ($app['modules'] as $module) {
+            foreach ($app->modules->getModules() as $module) {
                 if (isset($module['paths']['lang'])) {
                     $lang[] = $module['paths']['lang'];
                 }

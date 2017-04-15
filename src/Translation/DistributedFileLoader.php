@@ -1,6 +1,6 @@
 <?php
 
-namespace Infrastructure\Translation;
+namespace Orphan\Modules\Translation;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Translation\FileLoader;
