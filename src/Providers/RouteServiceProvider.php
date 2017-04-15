@@ -46,7 +46,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function registerApiRoutes($routeDirectory, $namespace)
     {
-        $routeFile .= DIRECTORY_SEPARATOR . 'api.php';
+        $routeDirectory .= DIRECTORY_SEPARATOR . 'api.php';
         if (file_exists($routeDirectory)) {
             Route::middleware('api')
                 ->middleware('api')
