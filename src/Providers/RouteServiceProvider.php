@@ -14,9 +14,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
+        $basePath = $this->apps->modules->getConfig('registration.directory');
+
         foreach ($this->app->modules->getModules() as $module) {
             $namespace = "{$module['namespace']}\\{$module['paths']['controllers']}";
-            $directory = "{$module['paths']['routes']}";
+            $directory = "{$basePath}" . DIRECTORY_SEPARATOR . "{$module['paths']['routes']}";
             if (file_exists($directory)) {
                 $this->registerWebRoutes($directory, $namespace);
                 $this->registerApiRoutes($directory, $namespace);
