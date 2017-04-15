@@ -14,8 +14,8 @@ return [
     // Configuration file information
     'registration' => [
         'file'      => 'register.php',
-        'directory' => env('MODULE_PATH', app_path('modules')),
-        'namespace' => env('MODULE_NAMESPACE', '\\App\\Modules'),
+        'directory' => env('MODULE_PATH', base_path('modules')),
+        'namespace' => env('MODULE_NAMESPACE', '\\Modules'),
     ],
     'default' => [
         /*
