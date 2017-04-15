@@ -172,7 +172,7 @@ class ModuleManager
         foreach ($module['paths'] as $key => $path) {
             $module['paths'][$key] = "{$module['path']}" . DIRECTORY_SEPARATOR . $path;
             if (!isset($module['namespaces'][$key])) {
-                $module['namespaces'][$key] = "{$module['namespace']}\\{$path}";
+                $module['namespaces'][$key] = str_replace('/', '\\', "{$module['namespace']}\\{$path}");
             }
         }
 
