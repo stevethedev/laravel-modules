@@ -15,7 +15,7 @@ class RouteServiceProvider extends ServiceProvider
     public function map()
     {
         foreach ($this->app->modules->getModules() as $module) {
-            $namespace = "{$module['namespace']}\\{$module['path']['controllers']}";
+            $namespace = "{$module['namespace']}\\{$module['paths']['controllers']}";
             $directory = "{$module['paths']['routes']}";
             if (file_exists($directory)) {
                 $this->registerWebRoutes($directory, $namespace);
