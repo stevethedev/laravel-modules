@@ -35,5 +35,6 @@ class ModuleServiceProvider extends ServiceProvider
         $this->app->register(RouteServiceProvider::class);
         $this->app->register(ViewServiceProvider::class);
         $this->app->register(TranslationServiceProvider::class);
+        $this->app->register(DistributedServiceProvider::class);
     }
 }
