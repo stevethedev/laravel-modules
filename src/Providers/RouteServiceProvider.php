@@ -2,7 +2,6 @@
 
 namespace Orphan\Modules\Providers;
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
@@ -15,7 +14,7 @@ class RouteServiceProvider extends ServiceProvider
     public function map()
     {
         foreach ($this->app->modules->getModules() as $module) {
-            if (file_exists($module['path'])) {
+            if (file_exists($module['path']['routes']) && file_exists($module['path']['controllers'])) {
                 $this->registerWebRoutes($module['paths']['routes'], $module['namespaces']['controllers']);
                 $this->registerApiRoutes($module['paths']['routes'], $module['namespaces']['controllers']);
             }
