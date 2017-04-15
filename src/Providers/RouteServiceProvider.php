@@ -14,7 +14,7 @@ class RouteServiceProvider extends ServiceProvider
     public function map()
     {
         foreach ($this->app->modules->getModules() as $module) {
-            if (file_exists($module['paths']['routes']) && file_exists($module['paths']['controllers'])) {
+            if (file_exists($module['path'])) {
                 $this->registerWebRoutes($module['paths']['routes'], $module['namespaces']['controllers']);
                 $this->registerApiRoutes($module['paths']['routes'], $module['namespaces']['controllers']);
             }
@@ -31,7 +31,8 @@ class RouteServiceProvider extends ServiceProvider
     {
         $routeDirectory .= DIRECTORY_SEPARATOR . 'web.php';
         if (file_exists($routeDirectory)) {
-            Route::middleware('web')
+            $this->app->router
+                ->middleware('web')
                 ->namespace($namespace)
                 ->group($routeDirectory);
         }
@@ -47,7 +48,8 @@ class RouteServiceProvider extends ServiceProvider
     {
         $routeDirectory .= DIRECTORY_SEPARATOR . 'api.php';
         if (file_exists($routeDirectory)) {
-            Route::middleware('api')
+            $this->app->router
+                ->middleware('api')
                 ->middleware('api')
                 ->namespace($namespace)
                 ->group($routeDirectory);
