@@ -144,7 +144,7 @@ class ModuleManager
                 'module'    => "$moduleName",
                 'enabled'   => isset($thisModule['enabled']) && $thisModule['enabled'],
                 'folder'    => dirname($registerPath),
-                'namespace' => isset($thisModule['namespace'])
+                'namespace' => isset($thisModule['namespace']) //< allow users to overwrite the namespace
                     ? "{$thisModule['namespace']}"
                     : "{$namespace}\\{$moduleName}",
             );
@@ -230,5 +230,32 @@ class ModuleManager
         }
 
         return $moduleConfig;
+    }
+
+    /**
+     * Retrieves the list of modules that are both registered AND enabled.
+     *
+     * @return array
+     */
+    public function getModules()
+    {
+        $modules = array();
+        foreach ($this->modules as $module) {
+            if (false !== $module['enabled']) {
+                $modules[$module['module']] = $module;
+            }
+        }
+        return $modules;
+    }
+
+    /**
+     * Retrieves the list of all registered modules, regardless of whether
+     * they are enabled.
+     *
+     * @return array
+     */
+    public function getAllModules()
+    {
+        return $this->modules;
     }
 }

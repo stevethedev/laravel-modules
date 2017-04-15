@@ -31,7 +31,7 @@ class ModuleServiceProvider extends ServiceProvider
 
     public function registerProviders()
     {
-        $this->app->registerDeferredProvider(RouteServiceProvider::class);
+        $this->app->register(RouteServiceProvider::class);
     }
 
     /*
